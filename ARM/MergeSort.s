@@ -135,9 +135,17 @@ _start:
 	str r1,[r0,#20]
 	mov r1,#5
 	str r1,[r0,#24]
+	mov r1,#102
+	str r1,[r0,#28]
+	mov r1,#43
+	str r1,[r0,#32]
+	mov r1,#54
+	str r1,[r0,#36]
+	mov r1,#1
+	str r1,[r0,#40]
 
 	// No. of Integers N to sort - r2 <- N-1
-	mov r2,#6
+	mov r2,#10
 	mov r7,#4
 	mla r1,r2,r7,r0
 

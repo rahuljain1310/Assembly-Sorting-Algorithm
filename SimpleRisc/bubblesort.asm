@@ -18,9 +18,6 @@
 	sub r1,r1,4
 	mov r6,r0
 	b .bubblesort
-	@cmp r1,r0
-	@bgt .bubblesort
-	@b .returnbs
 
 .main:
 

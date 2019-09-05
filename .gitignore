@@ -1,1 +1,3 @@
 examples/
+SimpleRisc/*.exe
+SimpleRisc/*.o
