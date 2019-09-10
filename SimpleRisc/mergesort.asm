@@ -1,5 +1,5 @@
-.addArrayr6:
-  add r9,r9,4
+.addArrayr6:      @ If One Array is Finished
+  add r9,r9,4     @ Fill the other in the Merge Array
   ld r8,[r6]
   st r8,[r9]
   add r6,r6,4
@@ -21,14 +21,14 @@
   add r3,r3,4
   b .merge
 
-.swap:
+.swap:            @ Function To Swap Between Specific Registers
 	ld r7,[r5]
 	st r8,[r5]
 	st r7,[r6]
 	add r5,r5,4
 	ret
 
-.partition:
+.partition:       @ Address to the Partition of the Array
   mov r5,r4
   cmp r3,r4
   bgt .partitionReturn
@@ -38,8 +38,10 @@
   .partitionReturn:
   ret
 
-.copyArray:
-  cmp r3,r4
+
+
+.copyArray:       @ Given Starting and Ending Address of a Array
+  cmp r3,r4       @ Copy one Array to Another Memory Location
   bgt .careturn
   ld r8,[r9]
   st r8,[r3]
@@ -49,7 +51,43 @@
   .careturn:
   ret
 
-.merge:
+.mergesort:
+  @ Base Case
+	cmp r3,r4
+	bgt .msReturn
+	beq .msReturn
+
+  add r9,r9,16   @ Allocate Stack Memory And Save Pointer
+  st ra,[r9]
+
+  st r3,4[r9]    @ Get Center r5 lo = r3, hi = r4
+  st r4,12[r9]
+  call .partition 
+  st r5,8[r9]
+
+  ld r3,4[r9]    @ Recursion
+  mov r4,r5
+  call .mergesort
+  ld r4,12[r9]
+  ld r5,8[r9]
+  add r3,r5,4
+	call .mergesort
+
+  ld r3,4[r9]    @ Merging Two Arrays
+  ld r5,8[r9]
+  ld r4,12[r9]
+  add r6,r5,4
+  call .mergeArray
+ 
+  @ Deallocate Memory And Restore Return
+  ld ra,[r9]
+  sub r9,r9,16
+	.msReturn:
+  ret
+
+
+
+.merge:             @ Merge -> Recursive Function To Combine Merged Arrays into One
   cmp r3,r5
   bgt .addArrayr6
   cmp r6,r4
@@ -95,46 +133,7 @@
   sub r9,r9,16
   ret
 
-.mergesort:
-  @ Base Case
-	cmp r3,r4
-	bgt .msReturn
-	beq .msReturn
-
-  @ Allocate Stack Memory And Save Pointer
-  add r9,r9,16
-  st ra,[r9]
-
-  @ Get Center r5 lo = r3, hi = r4
-  st r3,4[r9]
-  st r4,12[r9]
-  call .partition 
-  st r5,8[r9]
-
-  @ Recursion
-  ld r3,4[r9]
-  mov r4,r5
-  call .mergesort
-  ld r4,12[r9]
-  ld r5,8[r9]
-  add r3,r5,4
-	call .mergesort
-
-  @ Merging Two Arrays
-  ld r3,4[r9]
-  ld r5,8[r9]
-  ld r4,12[r9]
-  add r6,r5,4
-  call .mergeArray
- 
-  @ Deallocate Memory And Restore Return
-  ld ra,[r9]
-  sub r9,r9,16
-	.msReturn:
-  ret
-
 .main:
-
 	@ Loading the values as an array into the registers
 	mov r0, 0    
 	mov r1, 12	@ replace 12 with the number to be sorted
